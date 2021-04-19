@@ -1,0 +1,39 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 0
+}
+
+.grid {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid grey;
+  width: 600px;
+  height: 600px;
+  flex-wrap: wrap;
+}
+
+.grid div {
+  width: 20%;
+  height: 20%;
+  border: 1px solid green;
+}
+
+.grid div.laserCannon {
+  background-image: url('https://i.imgur.com/GvKEaCX.png');
+  background-size: contain;
+}
+
+.grid div.alien {
+  background-image: url('https://i.imgur.com/oPVodmw.jpg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
