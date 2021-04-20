@@ -1,24 +1,25 @@
+const elements = {
+  startBtn: document.querySelector('#startBtn'),
+  currentLivesDisplay: document.querySelector('#currentLivesDisplay'),
+  currentScoreDisplay: document.querySelector('#currentScoreDisplay'),
+}
+
 // ? Grid where all the cells go
 const grid = document.querySelector('.grid')
 // ? Width of my row (number of cells in one row)
 const width = 7
 // ? Create an array of all my cells
 const cells = []
-const start = document.querySelector('#start')
-// ? Initial value of laserCannon
-let cannonPosition = 45
-// // ? Initial value of alien
-// let alienPosition  = 0
-// ? Initial Score 
-const currentLivesDisplay = document.querySelector('#currentLivesDisplay')
-// ? Set direction, to determine which way the aliens move
-let direction = 1
-
 
 // ? Global variables 
 const lives = 3 
 const score = 0 
-let intervalId = 0 
+let cannonPosition = 45
+const currentLaserIndex = 0
+const alienPosition  = 0
+let direction = 1
+// let alienArmyId = 0
+let laserId 
 
 // ? Loop width ** 2 times, creating a cell each time.
 for (let index = 0; index < width ** 2; index++) {
@@ -35,20 +36,17 @@ for (let index = 0; index < width ** 2; index++) {
 // ? Adding the laserCannon into the final row on tile 45 
 cells[cannonPosition].classList.add('laserCannon')
 
-// // ? Adding the aliens to starting position on tile 0
-// cells[alienPosition].classList.add('alien')
-
 // ? ADD FUNCTION FOR COLLISION DETECTION HERE TO BE USED IN MAIN SET INTERVAL 
 
-
 // ? Add click event to the start button 
-start.addEventListener('click', () => {
+elements.startBtn.addEventListener('click', () => {
 // ? Preventing multiple set intervals  
-  if (intervalId !== 0) {
+  if (alienArmyId !== 0) {
     return
   }
 })
 
+// ?? AI MOVEMENT
 // ? Array of alien invaders
 const alienArmy = [
   0, 1, 2, 3, 4,
@@ -59,31 +57,43 @@ const alienArmy = [
 alienArmy.forEach(alien => {
   cells[alien].classList.add('alien')
 })
-intervalId = setInterval(() => {
+const alienArmyId = setInterval(() => {
+ 
 
+  // ? Wall detection and alien formation movement
   const leftWall = alienArmy[0] % width === 0 
   const rightWall = alienArmy[alienArmy.length - 1] % width === width - 1
-  // ? Wall detection 
+  
   if ((leftWall && direction === -1) || (rightWall && direction === 1)) {
+    
     // ? Needs to move down one row and reverse direction 
+    // ? Removes the alien from current position
     for (let i = 0; i <= alienArmy.length - 1; i++) {
-      console.log(cells[alienArmy[i]])
       cells[alienArmy[i]].classList.remove('alien')
-    }
+    } 
+    // ? Moves back or forward one index depending on direction 
     for (let i = 0; i <= alienArmy.length - 1; i++) {
       alienArmy[i] += width
     }
+    // ? Adds the alien to the updated position
     for (let i = 0; i <= alienArmy.length - 1; i++) {
       cells[alienArmy[i]].classList.add('alien')
     } 
+    // ? Performs check on current direction of travel and reverses it
     if (direction === 1) {
       direction = -1
     } else if (direction === -1) {
       direction = 1
     }
+    // ! Checking whether alien army have reached the planet level, i.e. on tile 42(first tile) 
+    // ! of last row) or greater NOT WORKING BUT HAVE ASKED FOR HELP
+    const alienInvasion = alienArmy.some(alienId => alienId > 42) 
+    if (alienInvasion) {
+      clearInterval(alienArmyId)
+    }
   } else { 
     for (let i = 0; i <= alienArmy.length - 1; i++) {
-      console.log(cells[alienArmy[i]])
+      // console.log(cells[alienArmy[i]])
       cells[alienArmy[i]].classList.remove('alien')
     }
     for (let i = 0; i <= alienArmy.length - 1; i++) {
@@ -93,27 +103,12 @@ intervalId = setInterval(() => {
       cells[alienArmy[i]].classList.add('alien')
     }
   }
-}, 1000)
+  
+}, 800)
 
+// ? PLAYER CONTROLS
 
-
-// // ? FUNCTION TO MOVE ALIENS
-// intervalId = setInterval(() => {
-//   // ! Checking lives
-//   if (cells[laserCannon].classList.contains('bomb')) {
-//     lives -= 1
-//   } if (lives === 0) {
-//     // ? If no lives, reset game
-//     resetGame()
-//     // ? Don't proceed beyond this point
-//     return
-//   }
-// })
-// // ! Updating the position of the aliens
-// if (aliens % width === 0)
-// cells[aliens].classList.remove(aliens)
-
-// ? Moving cannon based on the keystrokes
+// ? CANNON MOVEMENT
 document.addEventListener('keydown', (event) => {
   // ? Get the keyboard character typed from event.key
   const key = event.key
@@ -128,9 +123,36 @@ document.addEventListener('keydown', (event) => {
     cells[cannonPosition].classList.remove('laserCannon')
     cannonPosition += 1
     cells[cannonPosition].classList.add('laserCannon')
+    // ? Shoots cannon and then calls shootCannon function which will track laser trajectory
+  } else if (key === 'w') {
+    shootCannon()
   }
 })
 
+// ? LASER FIRE INTERVAL
+// ? Function that tracks the laser from point of firing (cannon current Index) through to IMPACT or 
+// ? END OF GRID 
+function shootCannon() {
+  // ? Sets the start index for laser to track through the 
+  let currentLaserIndex = cannonPosition
+  
+  laserId = setInterval(() => {
+    if (currentLaserIndex > width) {
+      cells[currentLaserIndex].classList.remove('laser')
+      currentLaserIndex -= width
+      cells[currentLaserIndex].classList.add('laser')
+    } 
+    // ! Collision detection alien and cannon which I'm using in the interim until I fix above 
+    if (cells[cannonPosition].classList.contains('alien', 'cannon')) {
+      console.log('GAME OVER!')
+      clearInterval(alienArmyId)
+    } else {
+      cells[currentLaserIndex].classList.remove('laser')
+      clearInterval(laserId)
+    }
+  }, 500)
+ 
+}
 
 // // ? Function that resets the game 
 // function resetGame () {

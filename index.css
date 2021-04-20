@@ -26,6 +26,10 @@ body {
   border: 1px solid green;
 }
 
+#startBtn {
+  background-color: white;
+}
+
 .grid div.laserCannon {
   background-image: url('https://i.imgur.com/GvKEaCX.png');
   background-size: contain;
@@ -36,4 +40,12 @@ body {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.laser {
+  background-color: yellow;
+  }
+
+.bomb { 
+  background-color: red;
 }
