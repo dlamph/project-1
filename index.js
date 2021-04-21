@@ -1,3 +1,10 @@
+// ! TODO - need to troubleshoot the comments in red
+// ! TODO - finish writing endGame function to reset everything and return score on alienIvasion 
+// ! TODO - create function to deal 
+// ! TODO - create bombHit function for collision detection of bomb and cannon 
+// ! TODO - create laserStrike function to detect when laser strike on alien 
+
+
 const elements = {
   startBtn: document.querySelector('#startBtn'),
   currentLivesDisplay: document.querySelector('#currentLivesDisplay'),
@@ -12,14 +19,17 @@ const width = 7
 const cells = []
 
 // ? Global variables 
-const lives = 3 
-const score = 0 
+let lives = 3 
+let score = 0 
 let cannonPosition = 45
 const currentLaserIndex = 0
-const alienPosition  = 0
+let alienPosition  = 0
 let direction = 1
-// let alienArmyId = 0
-let laserId 
+let alienArmyId = 0 
+let laserId = 0 
+// let bombDropId  
+// ? Added this to store the values of the shot down aliens so they won't be added again in the alienArmyId time
+// ? interval 
 
 // ? Loop width ** 2 times, creating a cell each time.
 for (let index = 0; index < width ** 2; index++) {
@@ -48,7 +58,7 @@ elements.startBtn.addEventListener('click', () => {
 
 // ?? AI MOVEMENT
 // ? Array of alien invaders
-const alienArmy = [
+let alienArmy = [
   0, 1, 2, 3, 4,
   7, 8, 9, 10, 11,
   14, 15, 16, 17, 18
@@ -57,9 +67,8 @@ const alienArmy = [
 alienArmy.forEach(alien => {
   cells[alien].classList.add('alien')
 })
-const alienArmyId = setInterval(() => {
- 
-
+alienArmyId = setInterval(() => {
+  dropBomb()
   // ? Wall detection and alien formation movement
   const leftWall = alienArmy[0] % width === 0 
   const rightWall = alienArmy[alienArmy.length - 1] % width === width - 1
@@ -86,11 +95,14 @@ const alienArmyId = setInterval(() => {
       direction = 1
     }
     // ! Checking whether alien army have reached the planet level, i.e. on tile 42(first tile) 
-    // ! of last row) or greater NOT WORKING BUT HAVE ASKED FOR HELP
+    // ! of last row) 
     const alienInvasion = alienArmy.some(alienId => alienId > 42) 
     if (alienInvasion) {
       clearInterval(alienArmyId)
     }
+    // ? As above - removes alien from current position, moves back or forward one cell
+    // ? and updates new position with alien
+    // ? Deals with normal movement, i.e when moving R to L, or L to R
   } else { 
     for (let i = 0; i <= alienArmy.length - 1; i++) {
       // console.log(cells[alienArmy[i]])
@@ -104,7 +116,7 @@ const alienArmyId = setInterval(() => {
     }
   }
   
-}, 800)
+}, 1000)
 
 // ? PLAYER CONTROLS
 
@@ -123,44 +135,102 @@ document.addEventListener('keydown', (event) => {
     cells[cannonPosition].classList.remove('laserCannon')
     cannonPosition += 1
     cells[cannonPosition].classList.add('laserCannon')
-    // ? Shoots cannon and then calls shootCannon function which will track laser trajectory
   } else if (key === 'w') {
     shootCannon()
   }
 })
 
-// ? LASER FIRE INTERVAL
-// ? Function that tracks the laser from point of firing (cannon current Index) through to IMPACT or 
-// ? END OF GRID 
-function shootCannon() {
-  // ? Sets the start index for laser to track through the 
-  let currentLaserIndex = cannonPosition
-  
-  laserId = setInterval(() => {
-    if (currentLaserIndex > width) {
-      cells[currentLaserIndex].classList.remove('laser')
-      currentLaserIndex -= width
-      cells[currentLaserIndex].classList.add('laser')
-    } 
-    // ! Collision detection alien and cannon which I'm using in the interim until I fix above 
-    if (cells[cannonPosition].classList.contains('alien', 'cannon')) {
-      console.log('GAME OVER!')
-      clearInterval(alienArmyId)
-    } else {
-      cells[currentLaserIndex].classList.remove('laser')
-      clearInterval(laserId)
+// ? BOMB DROP INTERVAL
+// ? Function that works much like the laser fire, tracks from point of dropping (randomAlienIndex) 
+// ? to edge of grid OR impact with cannon
+
+function dropBomb() {
+  // ? Gets a random index from alienArmy array to initiate bomb drop 
+  let randomBombDropIndex = alienArmy[Math.floor(Math.random() * alienArmy.length)]
+
+  const bombDropId = setInterval(() => {
+    // ? Invoke the cannonStrike function here to check during the time interval
+    cannonStrike()
+    cells[randomBombDropIndex].classList.remove('bomb')
+    if (randomBombDropIndex > cells.length - width) {
+      clearInterval(bombDropId)
+      return 
     }
+    randomBombDropIndex += width 
+    cells[randomBombDropIndex].classList.add('bomb')
   }, 500)
- 
 }
 
-// // ? Function that resets the game 
-// function resetGame () {
-//   lives = 3 
-//   score = 0
-//   cannonPosition = 45
-//   alienPosition = 0 
-//   intervalId = 0 
-//   clearInterval(intervalId)
-//   alert(`Final score ${score}`)
-// }
+// ? Function that deals with what to do when cannon has been hit by bomb
+function cannonStrike() {
+  if (cells[cannonPosition].classList.contains('bomb')) {
+    cells[cannonPosition].classList.remove('laserCannon')
+    cells[cannonPosition].classList.remove('bomb')
+    lives -= 1
+    cannonPosition = 45
+    cells[cannonPosition].classList.add('laserCannon')
+    elements.currentLivesDisplay.innerHTML = (`${lives}`)
+    if (lives === 0) {
+      gameOver()
+    } 
+  }
+}
+   
+// ? LASER FIRE INTERVAL
+// ? Function which is INVOKED BY PRESSING 'W' key above
+// ? tracks the laser from point of firing (cannon current Index) through to IMPACT or 
+// ? END OF GRID 
+
+// ? Set isShooting to false so that we can change it later once the function is invoked
+let isShooting = false
+
+function shootCannon() {
+
+  if (isShooting === false) {
+    // ? When we start shooting then the function runs
+    isShooting = true 
+  
+    // ? Sets the start index for laser to track through the grid 
+    let currentLaserIndex = cannonPosition
+  
+    laserId = setInterval(() => {
+    // ? Handles movement of laser whilst still within grid and not colliding with an alien 
+      if (currentLaserIndex > width && !cells[currentLaserIndex].classList.contains('alien')) {
+        cells[currentLaserIndex].classList.remove('laser')
+        currentLaserIndex -= width
+        cells[currentLaserIndex].classList.add('laser')
+      // ? COLLISION DETECTION
+      // ? Below else statement reflects when it has hit an alien, removes image of laser and alien
+      // ? then creates a filtered array of the aliens that have been hit and clears interval
+      } else {
+        cells[currentLaserIndex].classList.remove('laser')
+        cells[currentLaserIndex].classList.remove('alien')
+        score += 20
+        elements.currentScoreDisplay.innerHTML = (`${score}`)
+        alienArmy = alienArmy.filter((alien) => {
+          return alien !== currentLaserIndex
+        })
+        console.log(alienArmy)
+        clearInterval(laserId)
+        // ? when alien has been hit, the shot is over, 
+        isShooting = false
+      } 
+    }, 300)
+  }
+}
+   
+// // ? Also needs to update score with 20 points
+// score += 20
+// elements.currentLivesDisplay.innerHTML = score 
+  
+// ? Function that resets the game if all lives lost
+function gameOver() {
+  lives = 3 
+  score = 0
+  cannonPosition = 45
+  cells[cannonPosition].classList.add('laserCannon')
+  alienPosition = 0
+  alienArmyId = 0 
+  clearInterval(alienArmyId)
+  alert( `GAME OVER! Final score ${score}`)
+}
