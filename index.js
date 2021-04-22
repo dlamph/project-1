@@ -183,6 +183,9 @@ elements.startBtn.addEventListener('click', () => {
   // ? Function that deals with what to do when cannon has been hit by bomb
   function cannonStrike(bombDropId) {
     if (cells[cannonPosition].classList.contains('bomb')) {
+      elements.audioPlayer.src = './sounds/lifeLost.wav'
+      elements.audioPlayer.volume = 0.40
+      elements.audioPlayer.play()
       cells[cannonPosition].classList.remove('laserCannon')
       cells[cannonPosition].classList.remove('bomb')
       lives -= 1
@@ -220,6 +223,9 @@ elements.startBtn.addEventListener('click', () => {
           // ? Below else statement reflects when it has hit an alien, removes image of laser and alien
           // ? then creates a filtered array of the aliens that have been hit and clears interval
         } else {
+          elements.audioPlayer.src = './sounds/invaderkilled.wav'
+          elements.audioPlayer.volume = 0.40
+          elements.audioPlayer.play()
           cells[currentLaserIndex].classList.remove('laser')
           cells[currentLaserIndex].classList.remove('alien')
           score += 20
@@ -244,23 +250,29 @@ let resetGame = false
 
 // ? Function that resets the game if player Wins
 function  gameWin () {
+  elements.audioPlayer.src = './sounds/youWin'
+  elements.audioPlayer.volume = 0.40
+  elements.audioPlayer.play()
   resetGame = true
   gamePlaying = false
   clearInterval(laserId)
   clearInterval(alienArmyId)
   bombDropArray.forEach(bombId => clearInterval(bombId))
   elements.gameDisplay.style.display = 'block'
-  elements.gameDisplay.innerHTML = `YOU WIN! You scored ${score}. <br> <br> Press START to play again`
+  elements.gameDisplay.innerHTML = `YOU WIN! Your score = ${score}. <br> <br> Press START to play again`
 }
 
 // ? Function that resets the game if all lives lost, or aliens invade planet (arrive at last row)
 
 function gameOver() {
+  elements.audioPlayer.src = './sounds/lifeLost.wav'
+  elements.audioPlayer.volume = 0.40
+  elements.audioPlayer.play()
   resetGame = true
   gamePlaying = false
   clearInterval(laserId)
   clearInterval(alienArmyId)
   bombDropArray.forEach(bombId => clearInterval(bombId))
   elements.gameDisplay.style.display = 'block'
-  elements.gameDisplay.innerHTML = `Game Over! You scored ${score}. <br> <br> Press start to play again`
+  elements.gameDisplay.innerHTML = `Game Over! Your Score = ${score}. <br> <br> Press start to play again`
 }
