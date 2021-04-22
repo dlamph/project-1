@@ -10,14 +10,19 @@ body {
   flex-direction: column;
   margin: 0;
   background-color: black;
+  font-family: 'Press Start 2P', cursive;
+  color: white;
+  text-transform: uppercase;
+  background-image: url('https://i.imgur.com/E4rY1td.jpg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  background-color: rgb(29, 2, 29);
 }
 
-h1  {
-  font-family: 'Press Start 2P', cursive;
-  color: green;
-  font-size: 30px;
+header {
+  flex-direction: row;
   text-align: center;
-  text-transform: uppercase;
 }
 
 .grid {
@@ -32,22 +37,28 @@ h1  {
 }
 
 .grid div {
+  color: green;
+  font-size: 10px;
   width: 20%;
   height: 20%;
   border: 1px solid green;
 }
 
 #startBtn {
-  background-color: red;
   font-family: 'Press Start 2P', cursive;
+  text-transform: uppercase;
+  color: white;
+  background-color: purple;
   padding: auto;
   margin-top: 10px;
-  border: 1px solid black;
+  border: 2px solid black;
 }
 
 .grid div.laserCannon {
   background-image: url('https://i.imgur.com/GvKEaCX.png');
   background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .grid div.alien {
@@ -70,7 +81,8 @@ h1  {
   background-color: red;
 }
 
-#currentLivesDisplay, #currentScoreDisplay, p {
-  font-family: 'Press Start 2P', cursive;
-  color:  green;
+footer {
+  display: flex;
+  flex: 1;
+  align-content: flex-start;
 }
