@@ -137,16 +137,17 @@ elements.startBtn.addEventListener('click', () => {
     const key = event.key
 
     // ? Moves cannon left -- but only if it's not on the left column! 
-    if (key === 'a' && !(cannonPosition % width === 0)) {
+    if (key === 'ArrowLeft' && !(cannonPosition % width === 0)) {
       cells[cannonPosition].classList.remove('laserCannon')
       cannonPosition -= 1
       cells[cannonPosition].classList.add('laserCannon')
       // ? 'd' moves cannon right -- but only if it's not on the right column!
-    } else if (key === 'd' && !(cannonPosition % width === width - 1)) {
+    } else if (key === 'ArrowRight' && !(cannonPosition % width === width - 1)) {
       cells[cannonPosition].classList.remove('laserCannon')
       cannonPosition += 1
       cells[cannonPosition].classList.add('laserCannon')
-    } else if (key === 'w' && gamePlaying === true) {
+    } else if (key === ' ' && gamePlaying === true) {
+      event.preventDefault()
       elements.audioPlayer.src = './sounds/shoot.wav'
       elements.audioPlayer.volume = 0.30
       elements.audioPlayer.play()
@@ -196,7 +197,7 @@ elements.startBtn.addEventListener('click', () => {
   }
    
   // ? LASER FIRE INTERVAL
-  // ? Function which is INVOKED BY PRESSING 'W' key above
+  // ? Function which is INVOKED BY PRESSING spacebar
   // ? tracks the laser from point of firing (cannon current Index) through to IMPACT or 
   // ? END OF GRID 
 
