@@ -162,7 +162,6 @@ function dropBomb() {
 }
 
 // ? Function that deals with what to do when cannon has been hit by bomb
-
 function cannonStrike(bombDropId) {
   if (cells[cannonPosition].classList.contains('bomb')) {
     cells[cannonPosition].classList.remove('laserCannon')
@@ -226,7 +225,10 @@ function shootCannon() {
 }
   
 
-// function  gameWin ()
+function  gameWin () {
+  
+}
+
 
 // ? Function that resets the game if all lives lost
 function gameOver() {
@@ -238,5 +240,5 @@ function gameOver() {
   alienArmyId = 0 
   clearInterval(alienArmyId)
   bombDropArray.forEach(bombId => clearInterval(bombId))
-  console.log( `GAME OVER! Final score ${score}`)
+  console.log( `GAME OVER! Your score ${score}`)
 }

@@ -23,7 +23,15 @@ body {
 header {
   flex-direction: row;
   text-align: center;
+  margin: 20px;
 }
+
+.logo {
+  background-image: url('https://i.imgur.com/yGce776.jpg');
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
 
 .grid {
   background-image: url('https://i.imgur.com/8kQtjjZ.png');
@@ -84,5 +92,5 @@ header {
 footer {
   display: flex;
   flex: 1;
-  align-content: flex-start;
+  display: inline-block;
 }
