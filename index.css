@@ -17,39 +17,33 @@ body {
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;
-  background-color: rgb(29, 2, 29);
+  background-color: rgb(44, 2, 44);
 }
 
-header {
-  flex-direction: row;
-  text-align: center;
-  margin: 20px;
+#gameDisplay {
+  display: none;
+  transform: translate(0px, -500px);
+  background-color: black;
+  padding: 20px;
 }
-
-.logo {
-  background-image: url('https://i.imgur.com/yGce776.jpg');
-  background-repeat: no-repeat;
-  background-size: contain;
-}
-
 
 .grid {
   background-image: url('https://i.imgur.com/8kQtjjZ.png');
   background-size: contain;
   display: flex;
   flex-direction: row;
-  border: 1px solid grey;
+  /* border: 1px solid grey; */
   width: 600px;
   height: 600px;
   flex-wrap: wrap;
 }
 
 .grid div {
-  color: green;
-  font-size: 10px;
+  /* color: green; */
+  /* font-size: 10px; */
   width: 20%;
   height: 20%;
-  border: 1px solid green;
+  /* border: 1px solid green; */
 }
 
 #startBtn {
@@ -57,40 +51,47 @@ header {
   text-transform: uppercase;
   color: white;
   background-color: purple;
-  padding: auto;
+  padding: 20px;
+  cursor: pointer;
   margin-top: 10px;
   border: 2px solid black;
+  border-radius: 15px;
+
+}
+
+#startBtn:hover {
+background-color: green;
+}
+
+.displays {
+  text-align: left;
+  width: 75%;
 }
 
 .grid div.laserCannon {
-  background-image: url('https://i.imgur.com/GvKEaCX.png');
+  background-image: url('https://i.imgur.com/xpvgDl8.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
 }
 
 .grid div.alien {
-  background-image: url('https://i.imgur.com/ZGnwsiN.jpg');
+  background-image: url('https://i.imgur.com/pT4jmZO.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
 }
 
 .laser {
-  background-color: yellow;
-  size: 10px;
+  background-image: url('https://i.imgur.com/0xmDsMU.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
   }
 
 .bomb { 
-  background-color: purple;
-}
-
-.boom {
-  background-color: red;
-}
-
-footer {
-  display: flex;
-  flex: 1;
-  display: inline-block;
+  background-image: url('https://i.imgur.com/UUjlg0N.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
