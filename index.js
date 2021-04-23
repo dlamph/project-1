@@ -45,7 +45,8 @@ for (let index = 0; index < width ** 2; index++) {
 // ? Adding the laserCannon into the final row on tile 45 
 cells[cannonPosition].classList.add('laserCannon')
 
-// ? ADD FUNCTION FOR COLLISION DETECTION HERE TO BE USED IN MAIN SET INTERVAL 
+// elements.gameDisplay.style.display = 'block'
+// elements.gameDisplay.innerHTML = 'Welcome to Space Invaders <br> <br> <br> Use the Arrow Keys to guide your Spaceship <br> <br> and Fire with Space <br> <br> Press Space to Begin!'
 
 // ? Add click event to the start button 
 elements.startBtn.addEventListener('click', () => {
@@ -147,6 +148,8 @@ elements.startBtn.addEventListener('click', () => {
       cannonPosition += 1
       cells[cannonPosition].classList.add('laserCannon')
     } else if (key === ' ' && gamePlaying === true) {
+      // BUG: space bar preventDefault does not work after the game is over as gamePlaying
+      // is no longer true
       event.preventDefault()
       elements.audioPlayer.src = './sounds/shoot.wav'
       elements.audioPlayer.volume = 0.30
@@ -166,7 +169,6 @@ elements.startBtn.addEventListener('click', () => {
     const bombDropId = setInterval(() => {
       // ? Invoke the cannonStrike function here to check during the time interval
       cannonStrike(bombDropId)
-      // cells[randomBombDropIndex].classList.remove('bomb')
       if (randomBombDropIndex > cells.length - width) {
         cells[randomBombDropIndex].classList.remove('bomb')
         clearInterval(bombDropId)
@@ -184,7 +186,7 @@ elements.startBtn.addEventListener('click', () => {
   function cannonStrike(bombDropId) {
     if (cells[cannonPosition].classList.contains('bomb')) {
       elements.audioPlayer.src = './sounds/lifeLost.wav'
-      elements.audioPlayer.volume = 0.40
+      elements.audioPlayer.volume = 0.50
       elements.audioPlayer.play()
       cells[cannonPosition].classList.remove('laserCannon')
       cells[cannonPosition].classList.remove('bomb')
@@ -224,7 +226,7 @@ elements.startBtn.addEventListener('click', () => {
           // ? then creates a filtered array of the aliens that have been hit and clears interval
         } else {
           elements.audioPlayer.src = './sounds/invaderkilled.wav'
-          elements.audioPlayer.volume = 0.40
+          elements.audioPlayer.volume = 0.50
           elements.audioPlayer.play()
           cells[currentLaserIndex].classList.remove('laser')
           cells[currentLaserIndex].classList.remove('alien')
@@ -235,6 +237,9 @@ elements.startBtn.addEventListener('click', () => {
           })
           // ? Determines whether the player has won by shooting down all aliens
           if (alienArmy.length === 0) {
+            elements.audioPlayer.src = './sounds/youWin.wav'
+            elements.audioPlayer.volume = 1.0
+            elements.audioPlayer.play()
             gameWin()
           }
           clearInterval(laserId)
@@ -250,23 +255,20 @@ let resetGame = false
 
 // ? Function that resets the game if player Wins
 function  gameWin () {
-  elements.audioPlayer.src = './sounds/youWin'
-  elements.audioPlayer.volume = 0.40
-  elements.audioPlayer.play()
   resetGame = true
   gamePlaying = false
   clearInterval(laserId)
   clearInterval(alienArmyId)
   bombDropArray.forEach(bombId => clearInterval(bombId))
   elements.gameDisplay.style.display = 'block'
-  elements.gameDisplay.innerHTML = `YOU WIN! Your score = ${score}. <br> <br> Press START to play again`
+  elements.gameDisplay.innerHTML = `YOU WIN! <br> <br> Final score = ${score} <br> <br> Press START to play again`
 }
 
 // ? Function that resets the game if all lives lost, or aliens invade planet (arrive at last row)
 
 function gameOver() {
   elements.audioPlayer.src = './sounds/lifeLost.wav'
-  elements.audioPlayer.volume = 0.40
+  elements.audioPlayer.volume = 0.80
   elements.audioPlayer.play()
   resetGame = true
   gamePlaying = false
@@ -274,5 +276,5 @@ function gameOver() {
   clearInterval(alienArmyId)
   bombDropArray.forEach(bombId => clearInterval(bombId))
   elements.gameDisplay.style.display = 'block'
-  elements.gameDisplay.innerHTML = `Game Over! Your Score = ${score}. <br> <br> Press start to play again`
+  elements.gameDisplay.innerHTML = `Game Over! <br> <br> Final Score = ${score} <br> <br> Press start to play again`
 }

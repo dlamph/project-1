@@ -17,14 +17,15 @@ body {
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;
-  background-color: rgb(44, 2, 44);
+  background-color: rgb(33, 2, 58);
 }
 
 #gameDisplay {
   display: none;
-  transform: translate(0px, -500px);
-  background-color: black;
+  transform: translate(0px, -400px);
+  background-color: rgb(53, 0, 53);
   padding: 20px;
+  text-align: center;
 }
 
 .grid {
@@ -32,18 +33,14 @@ body {
   background-size: contain;
   display: flex;
   flex-direction: row;
-  /* border: 1px solid grey; */
   width: 600px;
   height: 600px;
   flex-wrap: wrap;
 }
 
 .grid div {
-  /* color: green; */
-  /* font-size: 10px; */
   width: 20%;
   height: 20%;
-  /* border: 1px solid green; */
 }
 
 #startBtn {
@@ -56,7 +53,6 @@ body {
   margin-top: 10px;
   border: 2px solid black;
   border-radius: 15px;
-
 }
 
 #startBtn:hover {
