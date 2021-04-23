@@ -45,7 +45,7 @@ for (let index = 0; index < width ** 2; index++) {
 // ? Adding the laserCannon into the final row on tile 45 
 cells[cannonPosition].classList.add('laserCannon')
 
-// NEED TO FIGURE OUT HOW TO PREVENT THIS FROM DISPLAYING INSTEAD OF WIN/LOSE FINAL SCORES
+//TO FIGURE OUT HOW TO PREVENT THIS FROM DISPLAYING INSTEAD OF WIN/LOSE FINAL SCORES
 // elements.gameDisplay.style.display = 'block'
 // elements.gameDisplay.innerHTML = 'Welcome to Space Invaders <br> <br> <br> Use the Arrow Keys to guide your Spaceship <br> <br> and Fire with Space <br> <br> Press Space to Begin!'
 
